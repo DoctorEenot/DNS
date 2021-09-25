@@ -322,9 +322,6 @@ impl Packet{
                     buf_index = index;
                     index = u16::from_be_bytes([data[index]&0b00111111,
                                                  data[index+1]]) as usize;
-                    if data[index] == 0{
-                        index += 1;
-                    }
                 } 
                 for n in index+1..index+1+data[index] as usize{
                     raw_string.push(data[n]);
@@ -336,9 +333,6 @@ impl Packet{
                         //buf_index = index;
                         index = u16::from_be_bytes([data[index]&0b00111111,
                                                      data[index+1]]) as usize;
-                        if data[index] == 0{
-                            index += 1;
-                        }
                         continue;
                     }
                     raw_string.push(b'.');
