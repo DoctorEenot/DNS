@@ -316,7 +316,7 @@ impl Packet{
             for i in 0..combined_answers_amount{
                 // parsing Name
                 let mut raw_string:Vec<u8> = Vec::new();
-                let mut buf_index = index;
+                let mut buf_index = 0;
                 if data[index]&0b11000000 != 0{
                     // if pointer
                     buf_index = index;
@@ -331,7 +331,18 @@ impl Packet{
                 }
                 index += 1+data[index] as usize;
                 while data[index] != 0{
+                    if data[index]&0b11000000 != 0{
+                        // if pointer
+                        //buf_index = index;
+                        index = u16::from_be_bytes([data[index]&0b00111111,
+                                                     data[index+1]]) as usize;
+                        if data[index] == 0{
+                            index += 1;
+                        }
+                        continue;
+                    }
                     raw_string.push(b'.');
+                    
                     for n in index+1..index+1+data[index] as usize{
                         raw_string.push(data[n]);
                     }
